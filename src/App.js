@@ -226,9 +226,9 @@ export default function App() {
   // Initialize Paddle.js on mount
   useEffect(() => {
     const Paddle = window.Paddle;
-    const clientToken = process.env.REACT_APP_PADDLE_CLIENT_TOKEN;
+    const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN;
     if (Paddle && clientToken) {
-      if (process.env.REACT_APP_PADDLE_SANDBOX === 'true') {
+      if (import.meta.env.VITE_PADDLE_SANDBOX === 'true') {
         Paddle.Environment.set('sandbox');
       }
       Paddle.Initialize({ token: clientToken });
@@ -290,7 +290,7 @@ export default function App() {
   const closeAuthModal = () => setAuthModal({ open: false, mode: 'signin' });
 
   return (
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ''}>
       <AuthContext.Provider value={{ ...authState, setAuth, clearAuth, openAuthModal }}>
         <TierContext.Provider value={{ tier, setTier }}>
           <BrowserRouter>

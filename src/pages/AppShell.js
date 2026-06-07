@@ -1070,8 +1070,8 @@ function BillingSection() {
   const [billingErr, setBillingErr] = useState(null);
   const [cancelDone, setCancelDone] = useState(false);
 
-  const MONTHLY = process.env.REACT_APP_PADDLE_MONTHLY_PRICE_ID || '';
-  const YEARLY  = process.env.REACT_APP_PADDLE_YEARLY_PRICE_ID  || '';
+  const MONTHLY = import.meta.env.VITE_PADDLE_MONTHLY_PRICE_ID || '';
+  const YEARLY  = import.meta.env.VITE_PADDLE_YEARLY_PRICE_ID  || '';
 
   function startCheckout(priceId, key) {
     const Paddle = window.Paddle;

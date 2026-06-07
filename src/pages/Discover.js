@@ -21,8 +21,8 @@ function useBreakpoint() {
 }
 
 // --- Paywall overlay ---
-const MONTHLY_PRICE_ID = process.env.REACT_APP_PADDLE_MONTHLY_PRICE_ID || '';
-const YEARLY_PRICE_ID  = process.env.REACT_APP_PADDLE_YEARLY_PRICE_ID  || '';
+const MONTHLY_PRICE_ID = import.meta.env.VITE_PADDLE_MONTHLY_PRICE_ID || '';
+const YEARLY_PRICE_ID  = import.meta.env.VITE_PADDLE_YEARLY_PRICE_ID  || '';
 
 function PaywallOverlay({ title, subtitle }) {
   const { user } = useAuth();
