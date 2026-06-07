@@ -1,0 +1,132 @@
+{
+  "App.js": {
+    "mtime": 1780084352.9920888,
+    "ast_hash": "1e828dc2e4f8df03b6a39a3414c73bc5",
+    "semantic_hash": "1e828dc2e4f8df03b6a39a3414c73bc5"
+  },
+  "components/Icons.js": {
+    "mtime": 1780762272.9747057,
+    "ast_hash": "1583c7ca0258f3ecceb8fe9e9fa98045",
+    "semantic_hash": "1583c7ca0258f3ecceb8fe9e9fa98045"
+  },
+  "components/Navbar.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "29a4dc7c3572dae4d6292bf99fbafd71",
+    "semantic_hash": "29a4dc7c3572dae4d6292bf99fbafd71"
+  },
+  "components/Navigation.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "8693afb89b530057ad1538af21d64578",
+    "semantic_hash": "8693afb89b530057ad1538af21d64578"
+  },
+  "components/ProfessorCard.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "eaf126e2edcea6587385d8bd549591f3",
+    "semantic_hash": "eaf126e2edcea6587385d8bd549591f3"
+  },
+  "components/ProfessorList.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "3a4af1f1ce1b9c152a3bed5795c2039a",
+    "semantic_hash": "3a4af1f1ce1b9c152a3bed5795c2039a"
+  },
+  "components/SearchBar.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "a39b5da36f4f7b9898ef0c38076414a1",
+    "semantic_hash": "a39b5da36f4f7b9898ef0c38076414a1"
+  },
+  "components/Shared.js": {
+    "mtime": 1780080209.975839,
+    "ast_hash": "aef05e0e6f59a0ca4d9e6f9ae321eed9",
+    "semantic_hash": "aef05e0e6f59a0ca4d9e6f9ae321eed9"
+  },
+  "data.js": {
+    "mtime": 1779857599.4763234,
+    "ast_hash": "a136f95a2d5ff6406e1733f5d384b8ff",
+    "semantic_hash": "a136f95a2d5ff6406e1733f5d384b8ff"
+  },
+  "index.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "9fc5841375336fc175b49f8767a11383",
+    "semantic_hash": "9fc5841375336fc175b49f8767a11383"
+  },
+  "pages/AppShell.js": {
+    "mtime": 1780763008.0076582,
+    "ast_hash": "5f8c3e4efafb9eec08ff07f29bf31339",
+    "semantic_hash": "5f8c3e4efafb9eec08ff07f29bf31339"
+  },
+  "pages/Calendar.js": {
+    "mtime": 1780082146.4187005,
+    "ast_hash": "4301c910467263e4f62827c1c6970996",
+    "semantic_hash": "4301c910467263e4f62827c1c6970996"
+  },
+  "pages/Composer.js": {
+    "mtime": 1780083482.2459395,
+    "ast_hash": "747e0575f513865e5cc6c510b5842b43",
+    "semantic_hash": "747e0575f513865e5cc6c510b5842b43"
+  },
+  "pages/Dashboard.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "628ae77f30c9cf8be0488e48b56a96e8",
+    "semantic_hash": "628ae77f30c9cf8be0488e48b56a96e8"
+  },
+  "pages/Discover.js": {
+    "mtime": 1780760587.1908348,
+    "ast_hash": "8f00c44c4069b561d9e670a3fc022934",
+    "semantic_hash": "8f00c44c4069b561d9e670a3fc022934"
+  },
+  "pages/Documents.js": {
+    "mtime": 1780760659.430026,
+    "ast_hash": "7855711b57bab90ec65cdc39f693ef35",
+    "semantic_hash": "7855711b57bab90ec65cdc39f693ef35"
+  },
+  "pages/Home.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "73aa47fe490c792d331e2a9fee91889b",
+    "semantic_hash": "73aa47fe490c792d331e2a9fee91889b"
+  },
+  "pages/Landing.js": {
+    "mtime": 1780759866.371491,
+    "ast_hash": "25ba4b78505170200c3f74acdfcf05f1",
+    "semantic_hash": "25ba4b78505170200c3f74acdfcf05f1"
+  },
+  "pages/Onboarding.js": {
+    "mtime": 1779803349.3479896,
+    "ast_hash": "08e637f83db20af43e5e81a6c6b24538",
+    "semantic_hash": "08e637f83db20af43e5e81a6c6b24538"
+  },
+  "pages/Pipeline.js": {
+    "mtime": 1780082564.9118412,
+    "ast_hash": "a317bc59f227964eb4d1c9cb9df25314",
+    "semantic_hash": "a317bc59f227964eb4d1c9cb9df25314"
+  },
+  "pages/ProfDetail.js": {
+    "mtime": 1780062106.2521126,
+    "ast_hash": "84abdc261e1576bcb597da4d7dff1f18",
+    "semantic_hash": "84abdc261e1576bcb597da4d7dff1f18"
+  },
+  "pages/Profile.js": {
+    "mtime": 1780760674.4852128,
+    "ast_hash": "cfbb7efd799e45fef12517a389bc32db",
+    "semantic_hash": "cfbb7efd799e45fef12517a389bc32db"
+  },
+  "pages/Scholarships.js": {
+    "mtime": 1780064187.8121727,
+    "ast_hash": "b276054a7062978da6f81810fc0509e1",
+    "semantic_hash": "b276054a7062978da6f81810fc0509e1"
+  },
+  "pages/Secondary.js": {
+    "mtime": 1779566269.569752,
+    "ast_hash": "17e078ec86bfbf57f71cea472bf2ccd2",
+    "semantic_hash": "17e078ec86bfbf57f71cea472bf2ccd2"
+  },
+  "services/api.js": {
+    "mtime": 1780083382.4029348,
+    "ast_hash": "4e98422a95e4d9dee7af964a75abd6ca",
+    "semantic_hash": "4e98422a95e4d9dee7af964a75abd6ca"
+  },
+  "store.js": {
+    "mtime": 1777985361.2107627,
+    "ast_hash": "5d41efb2323f8edfb4053f443fd1d976",
+    "semantic_hash": "5d41efb2323f8edfb4053f443fd1d976"
+  }
+}
