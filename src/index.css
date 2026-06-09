@@ -478,17 +478,21 @@ a { color: inherit; text-decoration: none; }
 .topnav-mobile-actions { display: none !important; }
 
 @media (max-width: 640px) {
-  .topnav { height: 52px; }
+  /* Constrain app to viewport so the page body never scrolls —
+     only .content scrolls internally, keeping the bottom nav fixed */
+  .app { height: 100vh; height: 100dvh; overflow: hidden; }
+
+  .topnav { height: 52px; flex-shrink: 0; }
   .topnav-search { display: none !important; }
   .topnav-extras { display: none !important; }
   .topnav-mobile-actions { display: flex !important; }
   .sidebar { display: none !important; }
   .bottom-nav { display: flex !important; }
-  .content { padding-bottom: 68px; }
-  .cv-grid, .sop-grid { grid-template-columns: 1fr !important; height: auto !important; min-height: calc(100vh - 56px); }
+  /* Extra bottom padding so last card clears the fixed nav + iOS safe area */
+  .content { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }
+  .cv-grid, .sop-grid { grid-template-columns: 1fr !important; height: auto !important; min-height: calc(100vh - 52px); }
   .composer-grid { grid-template-columns: 1fr !important; }
   .kbd { display: none; }
-  /* Scope h1 override to app content only — landing handles its own h1 sizing via JS */
   .content h1 { font-size: 28px !important; }
   .tabs { overflow-x: auto; flex-wrap: nowrap; }
   .tab { white-space: nowrap; }
