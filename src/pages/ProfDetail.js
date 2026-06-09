@@ -835,8 +835,9 @@ function TabStudents({ prof }) {
   const positions = raw.hiring_positions || [];
   const isHiring  = raw.is_hiring;
 
+  const isMobile = useIsMobile();
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 20 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.6fr 1fr', gap: isMobile ? 16 : 20 }}>
       <div className="col gap-4">
         <SectionCard>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -952,7 +953,18 @@ function TabNotes({ profId }) {
 // ---------------------------------------------------------------------------
 // ProfDetail — main export
 // ---------------------------------------------------------------------------
+function useIsMobile() {
+  const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
+  useEffect(() => {
+    const fn = () => setM(window.innerWidth < 640);
+    window.addEventListener('resize', fn, { passive: true });
+    return () => window.removeEventListener('resize', fn);
+  }, []);
+  return m;
+}
+
 export default function ProfDetail({ prof, go, savedIds, toggleSave }) {
+  const isMobile = useIsMobile();
   const saved = savedIds ? savedIds.has(prof?.id) : false;
   const raw   = prof?._raw || {};
 
@@ -998,81 +1010,131 @@ export default function ProfDetail({ prof, go, savedIds, toggleSave }) {
     <div className="fade-in">
 
       {/* ── Hero header ──────────────────────────────────────────── */}
-      <div style={{ background: 'var(--paper-2)', borderBottom: '1px solid var(--line)', padding: '24px 40px 0' }}>
+      <div style={{ background: 'var(--paper-2)', borderBottom: '1px solid var(--line)', padding: isMobile ? '16px 16px 0' : '24px 40px 0' }}>
         <button className="btn btn-sm btn-ghost" onClick={() => go('matches')}
-          style={{ marginBottom: 24, marginLeft: -8, color: 'var(--ink-3)' }}>
-          <Icon.Chevron size={12} style={{ transform: 'rotate(180deg)' }}/> Back to matches
+          style={{ marginBottom: isMobile ? 14 : 24, marginLeft: -8, color: 'var(--ink-3)' }}>
+          <Icon.Chevron size={12} style={{ transform: 'rotate(180deg)' }}/> Back
         </button>
 
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start' }}>
 
-            {/* Photo */}
-            <ProfPhoto prof={prof} size={112}/>
-
-            {/* Identity */}
-            <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
-              <h1 style={{ fontSize: 34, fontWeight: 680, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 8 }}>
-                {prof.name}
-              </h1>
-
-              {/* Designation */}
-              <div style={{ fontSize: 16, fontWeight: 560, color: 'var(--ink-2)', marginBottom: 6, lineHeight: 1.3 }}>
-                {prof.title || 'Professor'}
-                {prof.dept && prof.dept !== prof.school && (
-                  <span style={{ fontWeight: 400, color: 'var(--ink-3)' }}> · {prof.dept}</span>
-                )}
+          {isMobile ? (
+            /* ── Mobile hero layout ── */
+            <div>
+              {/* Top row: photo + score */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+                <ProfPhoto prof={prof} size={72}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h1 style={{ fontSize: 22, fontWeight: 680, letterSpacing: '-0.025em', lineHeight: 1.15, marginBottom: 4 }}>
+                    {prof.name}
+                  </h1>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink-2)', lineHeight: 1.3 }}>
+                    {prof.title || 'Professor'}
+                    {prof.dept && prof.dept !== prof.school && (
+                      <span style={{ fontWeight: 400, color: 'var(--ink-3)' }}> · {prof.dept}</span>
+                    )}
+                  </div>
+                </div>
+                <div style={{ display:'flex',flexDirection:'column',alignItems:'center',gap:4,flexShrink:0 }}>
+                  <ScoreRing value={prof.score} size={56}/>
+                  <span className="mono muted" style={{ fontSize:9,letterSpacing:'0.04em',textTransform:'uppercase' }}>match</span>
+                </div>
               </div>
 
-              {/* University + location + flag */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 14, color: 'var(--ink-3)', marginBottom: 20, flexWrap: 'wrap' }}>
-                <Icon.Building size={14} color="var(--ink-4)"/>
+              {/* University row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ink-3)', marginBottom: 12, flexWrap: 'wrap' }}>
+                <Icon.Building size={13} color="var(--ink-4)"/>
                 <span style={{ fontWeight: 500, color: 'var(--ink-2)' }}>{prof.school}</span>
                 {(prof.state || prof.country) && (
                   <>
                     <span style={{ color: 'var(--line-2)' }}>·</span>
-                    {flag && <span style={{ fontSize: 18, lineHeight: 1, userSelect: 'none' }}>{flag}</span>}
+                    {flag && <span style={{ fontSize: 16, lineHeight: 1 }}>{flag}</span>}
                     <span>{[prof.state, countryMeta?.name || prof.country].filter(Boolean).join(', ')}</span>
                   </>
                 )}
               </div>
 
-              {/* Stats strip */}
-              <StatStrip hIndex={prof.hIndex} citations={prof.citations} hiringConfidence={raw.hiring_confidence > 0 ? raw.hiring_confidence : 0}/>
-
-              {/* Status + hiring pills */}
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16, marginBottom: 18 }}>
+              {/* Pills */}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
                 {prof.accepting
-                  ? <span className="pill pill-green" style={{ fontSize: 12, padding: '4px 11px' }}><Icon.Dot color="oklch(0.5 0.12 155)" size={6}/> Accepting students</span>
-                  : <span className="pill pill-outline" style={{ fontSize: 12, padding: '4px 11px' }}>Not accepting</span>}
-                <StatusBadge status={prof.professorStatus} size="lg"/>
+                  ? <span className="pill pill-green" style={{ fontSize: 11, padding: '3px 9px' }}><Icon.Dot color="oklch(0.5 0.12 155)" size={6}/> Accepting</span>
+                  : <span className="pill pill-outline" style={{ fontSize: 11, padding: '3px 9px' }}>Not accepting</span>}
+                <StatusBadge status={prof.professorStatus} size="sm"/>
+              </div>
+
+              {/* Stats */}
+              <div style={{ marginBottom: 14 }}>
+                <StatStrip hIndex={prof.hIndex} citations={prof.citations} hiringConfidence={raw.hiring_confidence > 0 ? raw.hiring_confidence : 0}/>
               </div>
 
               {/* Links */}
-              <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', fontSize: 13, paddingBottom: 4 }}>
-                {prof.homepage && <a href={prof.homepage} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.Globe size={13}/> Homepage</a>}
-                {prof.email    && <a href={`mailto:${prof.email}`} style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.Mail size={13}/> {prof.email}</a>}
-                {raw.google_scholar_id && <a href={`https://scholar.google.com/citations?user=${raw.google_scholar_id}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={13}/> Google Scholar</a>}
-                {raw.orcid     && <a href={`https://orcid.org/${raw.orcid}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={13}/> ORCID</a>}
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 12, marginBottom: 4 }}>
+                {prof.homepage && <a href={prof.homepage} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:4,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.Globe size={12}/> Homepage</a>}
+                {raw.google_scholar_id && <a href={`https://scholar.google.com/citations?user=${raw.google_scholar_id}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:4,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={12}/> Scholar</a>}
+                {raw.orcid && <a href={`https://orcid.org/${raw.orcid}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:4,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={12}/> ORCID</a>}
+              </div>
+
+              {/* Actions */}
+              <div style={{ display:'flex',gap:8,marginTop:16 }}>
+                <button className="btn btn-primary" style={{ flex:1,justifyContent:'center',fontSize:13 }} onClick={() => go('compose',{compose:prof})}><Icon.Send size={13}/> Reach out</button>
+                <button className="btn" style={{ fontSize:13,padding:'8px 14px' }} onClick={() => toggleSave && toggleSave(prof.id)}>{saved?<Icon.StarF size={14} color="oklch(0.7 0.13 75)"/>:<Icon.Star size={14}/>}</button>
               </div>
             </div>
-
-            {/* Match score */}
-            <div style={{ display:'flex',flexDirection:'column',alignItems:'center',gap:8,flexShrink:0,paddingTop:8 }}>
-              <ScoreRing value={prof.score} size={80}/>
-              <span className="mono muted" style={{ fontSize:11,letterSpacing:'0.04em',textTransform:'uppercase' }}>match score</span>
+          ) : (
+            /* ── Desktop hero layout ── */
+            <div>
+              <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start' }}>
+                <ProfPhoto prof={prof} size={112}/>
+                <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
+                  <h1 style={{ fontSize: 34, fontWeight: 680, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: 8 }}>
+                    {prof.name}
+                  </h1>
+                  <div style={{ fontSize: 16, fontWeight: 560, color: 'var(--ink-2)', marginBottom: 6, lineHeight: 1.3 }}>
+                    {prof.title || 'Professor'}
+                    {prof.dept && prof.dept !== prof.school && (
+                      <span style={{ fontWeight: 400, color: 'var(--ink-3)' }}> · {prof.dept}</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 14, color: 'var(--ink-3)', marginBottom: 20, flexWrap: 'wrap' }}>
+                    <Icon.Building size={14} color="var(--ink-4)"/>
+                    <span style={{ fontWeight: 500, color: 'var(--ink-2)' }}>{prof.school}</span>
+                    {(prof.state || prof.country) && (
+                      <>
+                        <span style={{ color: 'var(--line-2)' }}>·</span>
+                        {flag && <span style={{ fontSize: 18, lineHeight: 1, userSelect: 'none' }}>{flag}</span>}
+                        <span>{[prof.state, countryMeta?.name || prof.country].filter(Boolean).join(', ')}</span>
+                      </>
+                    )}
+                  </div>
+                  <StatStrip hIndex={prof.hIndex} citations={prof.citations} hiringConfidence={raw.hiring_confidence > 0 ? raw.hiring_confidence : 0}/>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16, marginBottom: 18 }}>
+                    {prof.accepting
+                      ? <span className="pill pill-green" style={{ fontSize: 12, padding: '4px 11px' }}><Icon.Dot color="oklch(0.5 0.12 155)" size={6}/> Accepting students</span>
+                      : <span className="pill pill-outline" style={{ fontSize: 12, padding: '4px 11px' }}>Not accepting</span>}
+                    <StatusBadge status={prof.professorStatus} size="lg"/>
+                  </div>
+                  <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', fontSize: 13, paddingBottom: 4 }}>
+                    {prof.homepage && <a href={prof.homepage} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.Globe size={13}/> Homepage</a>}
+                    {prof.email    && <a href={`mailto:${prof.email}`} style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.Mail size={13}/> {prof.email}</a>}
+                    {raw.google_scholar_id && <a href={`https://scholar.google.com/citations?user=${raw.google_scholar_id}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={13}/> Google Scholar</a>}
+                    {raw.orcid     && <a href={`https://orcid.org/${raw.orcid}`} target="_blank" rel="noopener noreferrer" style={{ display:'flex',alignItems:'center',gap:5,color:'var(--green-deep)',textDecoration:'none',fontWeight:500 }}><Icon.ExternalLink size={13}/> ORCID</a>}
+                  </div>
+                </div>
+                <div style={{ display:'flex',flexDirection:'column',alignItems:'center',gap:8,flexShrink:0,paddingTop:8 }}>
+                  <ScoreRing value={prof.score} size={80}/>
+                  <span className="mono muted" style={{ fontSize:11,letterSpacing:'0.04em',textTransform:'uppercase' }}>match score</span>
+                </div>
+              </div>
+              <div style={{ display:'flex',gap:10,marginTop:24 }}>
+                <button className="btn btn-primary btn-lg" onClick={() => go('compose',{compose:prof})}><Icon.Send size={14}/> Draft outreach email</button>
+                <button className="btn btn-lg" onClick={() => toggleSave && toggleSave(prof.id)}>{saved?<Icon.StarF size={15} color="oklch(0.7 0.13 75)"/>:<Icon.Star size={15}/>}{saved?'Saved':'Save to shortlist'}</button>
+                <button className="btn btn-lg" onClick={() => setActiveTab('notes')}><Icon.Plus size={14}/> Add note</button>
+              </div>
             </div>
-          </div>
-
-          {/* Actions */}
-          <div style={{ display:'flex',gap:10,marginTop:24 }}>
-            <button className="btn btn-primary btn-lg" onClick={() => go('compose',{compose:prof})}><Icon.Send size={14}/> Draft outreach email</button>
-            <button className="btn btn-lg" onClick={() => toggleSave && toggleSave(prof.id)}>{saved?<Icon.StarF size={15} color="oklch(0.7 0.13 75)"/>:<Icon.Star size={15}/>}{saved?'Saved':'Save to shortlist'}</button>
-            <button className="btn btn-lg" onClick={() => setActiveTab('notes')}><Icon.Plus size={14}/> Add note</button>
-          </div>
+          )}
 
           {/* Tabs */}
-          <div className="tabs" style={{ marginTop: 24 }}>
+          <div className="tabs" style={{ marginTop: isMobile ? 16 : 24 }}>
             {TABS.map(t => (
               <div key={t.id} className={'tab'+(activeTab===t.id?' active':'')} onClick={() => setActiveTab(t.id)}>
                 {t.label}{t.count!=null&&<span className="mono muted"> · {t.count}</span>}
@@ -1083,10 +1145,10 @@ export default function ProfDetail({ prof, go, savedIds, toggleSave }) {
       </div>
 
       {/* ── Tab content ──────────────────────────────────────────── */}
-      <div style={{ padding: '32px 40px 72px', maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ padding: isMobile ? '20px 16px 80px' : '32px 40px 72px', maxWidth: 1100, margin: '0 auto' }}>
 
         {activeTab === 'overview' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.6fr 1fr', gap: isMobile ? 16 : 24 }}>
 
             {/* Left column */}
             <div className="col gap-5">
