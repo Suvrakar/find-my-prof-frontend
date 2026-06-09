@@ -799,11 +799,16 @@ export default function Landing() {
         }}>
           <div className="brand" style={{ fontSize: 14 }}><Icon.Logo /> Find My Professor</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px', justifyContent: 'center' }}>
-            {['Privacy', 'Terms', 'Pricing', 'Status'].map(l => (
-              <span key={l} style={{ cursor: 'pointer', transition: 'color 0.12s' }}
+            {[
+              { label: 'Privacy', path: '/privacy' },
+              { label: 'Terms',   path: '/terms' },
+              { label: 'Pricing', path: '/pricing' },
+            ].map(({ label, path }) => (
+              <span key={label} onClick={() => navigate(path)}
+                style={{ cursor: 'pointer', transition: 'color 0.12s' }}
                 onMouseOver={e => { e.currentTarget.style.color = 'var(--ink)'; }}
                 onMouseOut={e => { e.currentTarget.style.color = 'var(--ink-3)'; }}>
-                {l}
+                {label}
               </span>
             ))}
           </div>

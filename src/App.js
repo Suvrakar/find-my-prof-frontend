@@ -4,7 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import Landing from './pages/Landing';
 import Onboarding from './pages/Onboarding';
 import AppShell from './pages/AppShell';
-import { Pricing, Admin } from './pages/Secondary';
+import { Pricing, Admin, TermsOfService, PrivacyPolicy } from './pages/Secondary';
 import { authService, paymentService } from './services/api';
 import './App.css';
 
@@ -314,6 +314,8 @@ export default function App() {
               <Route path="/"           element={<Landing />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/pricing"    element={<Pricing />} />
+              <Route path="/terms"      element={<TermsOfService />} />
+              <Route path="/privacy"    element={<PrivacyPolicy />} />
               <Route path="/admin"      element={<Admin />} />
               <Route path="/app/*"      element={<ProtectedRoute><AppShell /></ProtectedRoute>} />
               <Route path="*"           element={<Navigate to="/" replace />} />

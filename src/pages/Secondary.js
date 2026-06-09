@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../components/Icons';
 import { Avatar } from '../components/Shared';
@@ -293,9 +293,245 @@ export function Admin() {
               Per-student data is never visible to admins. You see counts, distributions, and outcomes — never names, drafts, or inboxes.
             </div>
           </div>
-          <button className="btn" style={{ background: "var(--paper)", color: "var(--green-deep)", border: 0 }}>Privacy policy</button>
+          <button className="btn" style={{ background: "var(--paper)", color: "var(--green-deep)", border: 0 }} onClick={() => window.open('/privacy', '_blank')}>Privacy policy</button>
         </div>
       </div>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Shared legal page shell
+// ─────────────────────────────────────────────────────────────────────────────
+function LegalPage({ title, subtitle, children }) {
+  const navigate = useNavigate();
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--paper)', fontFamily: 'inherit' }}>
+      {/* Nav */}
+      <nav className="topnav" style={{ background: 'transparent' }}>
+        <div className="brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <Icon.Logo /> Find My Professor
+        </div>
+        <button className="btn btn-ghost" style={{ marginLeft: 'auto' }} onClick={() => navigate(-1)}>← Back</button>
+      </nav>
+
+      {/* Header */}
+      <div style={{ maxWidth: 740, margin: '0 auto', padding: '56px 24px 0' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--green-deep)', letterSpacing: '0.08em',
+          textTransform: 'uppercase', marginBottom: 12 }}>Legal</div>
+        <h1 style={{ fontSize: 38, fontWeight: 700, letterSpacing: '-0.03em', margin: '0 0 10px' }}>{title}</h1>
+        <p style={{ color: 'var(--ink-3)', fontSize: 14, margin: 0 }}>{subtitle}</p>
+        <div style={{ height: 1, background: 'var(--line)', margin: '32px 0' }}/>
+      </div>
+
+      {/* Body */}
+      <div style={{ maxWidth: 740, margin: '0 auto', padding: '0 24px 96px', fontSize: 14.5,
+        lineHeight: 1.78, color: 'var(--ink-2)' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Section({ title, children }) {
+  return (
+    <div style={{ marginBottom: 36 }}>
+      <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--ink)', margin: '0 0 10px',
+        letterSpacing: '-0.01em' }}>{title}</h2>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function P({ children }) {
+  return <p style={{ margin: '0 0 12px' }}>{children}</p>;
+}
+
+function UL({ items }) {
+  return (
+    <ul style={{ margin: '0 0 12px', paddingLeft: 20 }}>
+      {items.map((it, i) => <li key={i} style={{ marginBottom: 6 }}>{it}</li>)}
+    </ul>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Terms of Service
+// ─────────────────────────────────────────────────────────────────────────────
+export function TermsOfService() {
+  return (
+    <LegalPage
+      title="Terms of Service"
+      subtitle="Effective date: June 10, 2026 · Last updated: June 10, 2026"
+    >
+      <Section title="1. Acceptance of Terms">
+        <P>By accessing or using Find My Professor ("the Service," "we," "our") at findmyprofessor.me, you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.</P>
+        <P>We may update these terms at any time. Continued use of the Service after changes are posted constitutes acceptance of the revised terms.</P>
+      </Section>
+
+      <Section title="2. Description of Service">
+        <P>Find My Professor is an AI-powered academic advisor discovery platform that helps students find, evaluate, and reach out to research advisors and professors. Core features include:</P>
+        <UL items={[
+          'Professor discovery and matching based on research interests',
+          'AI-assisted outreach email drafting',
+          'CV and Statement of Purpose (SOP) builder',
+          'Scholarship discovery and matching',
+          'Application pipeline tracking',
+        ]}/>
+        <P>Certain features require a paid subscription ("Pro"). Free plan users have access to a limited feature set as described on the Pricing page.</P>
+      </Section>
+
+      <Section title="3. Accounts">
+        <P>You must create an account to use most features. You agree to:</P>
+        <UL items={[
+          'Provide accurate information when registering',
+          'Keep your password confidential',
+          'Notify us immediately of any unauthorized access',
+          'Be at least 16 years old (or the minimum age of digital consent in your country)',
+        ]}/>
+        <P>You are responsible for all activity that occurs under your account.</P>
+      </Section>
+
+      <Section title="4. Acceptable Use">
+        <P>You agree not to use the Service to:</P>
+        <UL items={[
+          'Send unsolicited bulk emails or spam to professors',
+          'Misrepresent your identity, credentials, or research background',
+          'Scrape, crawl, or systematically extract data from the Service',
+          'Attempt to reverse-engineer, decompile, or access non-public parts of the platform',
+          'Use the Service for any unlawful purpose',
+          'Harass, intimidate, or threaten professors or other users',
+        ]}/>
+        <P>We reserve the right to suspend or terminate accounts that violate these terms.</P>
+      </Section>
+
+      <Section title="5. Gmail Integration">
+        <P>If you connect your Gmail account to send outreach emails, you authorize Find My Professor to compose and send emails on your behalf using the Gmail API. We access only the minimum scopes required to send email. We do not read, store, or analyze the content of your inbox.</P>
+        <P>You can revoke this access at any time from your Google Account settings at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--green-deep)' }}>myaccount.google.com/permissions</a>.</P>
+      </Section>
+
+      <Section title="6. Payments and Subscriptions">
+        <P>Paid plans are billed through Paddle, our payment processor. By subscribing you agree to Paddle's terms of service. Subscription fees are charged at the start of each billing cycle (monthly or annual).</P>
+        <UL items={[
+          'You may cancel at any time; access continues until the end of the current billing period',
+          'Refunds are handled at our discretion — contact us within 7 days of a charge for review',
+          'We reserve the right to change pricing with 30 days notice',
+        ]}/>
+      </Section>
+
+      <Section title="7. Intellectual Property">
+        <P>All content, design, and code comprising the Service is owned by Find My Professor or its licensors. You retain ownership of content you create (CVs, SOPs, email drafts). By using the Service you grant us a limited, non-exclusive license to store and process your content solely to provide the Service.</P>
+      </Section>
+
+      <Section title="8. Disclaimers">
+        <P>The Service is provided "as is" without warranties of any kind. We do not guarantee that professor information is current or accurate — data is sourced from public academic databases and may be out of date. We do not guarantee that using the Service will result in acceptance to any program or a response from any professor.</P>
+      </Section>
+
+      <Section title="9. Limitation of Liability">
+        <P>To the fullest extent permitted by law, Find My Professor shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service. Our total liability for any claim shall not exceed the amount you paid us in the 12 months preceding the claim.</P>
+      </Section>
+
+      <Section title="10. Termination">
+        <P>You may delete your account at any time from your profile settings. We may suspend or terminate your access if you violate these terms, with or without notice. Upon termination, your right to use the Service ceases immediately.</P>
+      </Section>
+
+      <Section title="11. Governing Law">
+        <P>These terms are governed by the laws of the jurisdiction in which Find My Professor operates, without regard to conflict of law principles.</P>
+      </Section>
+
+      <Section title="12. Contact">
+        <P>Questions about these terms? Email us at <a href="mailto:contact@findmyprofessor.me" style={{ color: 'var(--green-deep)' }}>contact@findmyprofessor.me</a>.</P>
+      </Section>
+    </LegalPage>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Privacy Policy
+// ─────────────────────────────────────────────────────────────────────────────
+export function PrivacyPolicy() {
+  return (
+    <LegalPage
+      title="Privacy Policy"
+      subtitle="Effective date: June 10, 2026 · Last updated: June 10, 2026"
+    >
+      <Section title="1. Overview">
+        <P>Find My Professor ("we," "us") takes your privacy seriously. This policy explains what data we collect, how we use it, who we share it with, and your rights. We collect only what we need to provide the Service.</P>
+      </Section>
+
+      <Section title="2. Information We Collect">
+        <P><strong>Account data</strong> — username, email address, and password (stored as a secure hash) when you register. If you sign in with Google, we receive your name, email, and Google account ID.</P>
+        <P><strong>Profile and document data</strong> — CV content, SOP drafts, research interests, and any other information you enter into the platform.</P>
+        <P><strong>Outreach data</strong> — email templates and professor contact records you create. If you connect Gmail, we send emails on your behalf but do not store your inbox or read incoming mail.</P>
+        <P><strong>Usage data</strong> — pages visited, features used, and interactions with the Service, collected via Google Analytics 4. This data is aggregated and anonymized.</P>
+        <P><strong>Payment data</strong> — transactions are processed by Paddle. We do not store your card number; we receive only a subscription status and plan identifier.</P>
+        <P><strong>Technical data</strong> — IP address, browser type, and device information collected automatically with each request.</P>
+      </Section>
+
+      <Section title="3. How We Use Your Data">
+        <UL items={[
+          'To provide, operate, and improve the Service',
+          'To match you with relevant professors and scholarships using AI',
+          'To send outreach emails on your behalf (Gmail integration)',
+          'To process payments and manage your subscription',
+          'To send transactional emails (account confirmations, password resets)',
+          'To analyze aggregate usage patterns and improve the product',
+          'To detect and prevent fraud or abuse',
+        ]}/>
+        <P>We do not sell your personal data to third parties.</P>
+      </Section>
+
+      <Section title="4. Third-Party Services">
+        <P>We use the following third-party services that may process your data:</P>
+        <UL items={[
+          'Google OAuth / Gmail API — for sign-in and email sending',
+          'Google Analytics 4 — for anonymized usage analytics',
+          'Paddle — for payment processing and subscription management',
+          'Backblaze B2 — for storing profile avatar images',
+          'Neon — for secure cloud database hosting',
+          'Resend — for transactional email delivery',
+        ]}/>
+        <P>Each service operates under its own privacy policy and data processing agreements. We only share the minimum data required for each service to function.</P>
+      </Section>
+
+      <Section title="5. Data Retention">
+        <P>We retain your account and document data for as long as your account is active. If you delete your account, we will delete your personal data within 30 days, except where we are required to retain it for legal or billing compliance purposes.</P>
+        <P>Anonymized analytics data may be retained indefinitely.</P>
+      </Section>
+
+      <Section title="6. Cookies">
+        <P>We use session cookies to keep you logged in and localStorage to store your authentication token. Google Analytics sets its own cookies for analytics tracking. We do not use advertising cookies or cross-site tracking.</P>
+      </Section>
+
+      <Section title="7. Your Rights">
+        <P>Depending on your location, you may have the right to:</P>
+        <UL items={[
+          'Access a copy of the personal data we hold about you',
+          'Correct inaccurate data',
+          'Request deletion of your data ("right to be forgotten")',
+          'Object to or restrict certain processing',
+          'Port your data to another service',
+          'Withdraw consent at any time (e.g., revoking Gmail access)',
+        ]}/>
+        <P>To exercise any of these rights, email <a href="mailto:contact@findmyprofessor.me" style={{ color: 'var(--green-deep)' }}>contact@findmyprofessor.me</a>. We will respond within 30 days.</P>
+      </Section>
+
+      <Section title="8. Children's Privacy">
+        <P>The Service is not directed at children under 16. We do not knowingly collect personal data from anyone under 16. If you believe a child has provided us with data, please contact us and we will delete it promptly.</P>
+      </Section>
+
+      <Section title="9. Security">
+        <P>We use industry-standard measures including HTTPS encryption in transit, hashed passwords, and access-controlled databases. No system is 100% secure — if you discover a vulnerability, please disclose it responsibly to <a href="mailto:contact@findmyprofessor.me" style={{ color: 'var(--green-deep)' }}>contact@findmyprofessor.me</a>.</P>
+      </Section>
+
+      <Section title="10. Changes to This Policy">
+        <P>We may update this policy periodically. If we make material changes, we will notify you by email or a prominent notice in the app at least 14 days before the changes take effect.</P>
+      </Section>
+
+      <Section title="11. Contact">
+        <P>For privacy questions or data requests: <a href="mailto:contact@findmyprofessor.me" style={{ color: 'var(--green-deep)' }}>contact@findmyprofessor.me</a></P>
+      </Section>
+    </LegalPage>
   );
 }
