@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import Landing from './pages/Landing';
 import Onboarding from './pages/Onboarding';
@@ -7,6 +7,18 @@ import AppShell from './pages/AppShell';
 import { Pricing, Admin } from './pages/Secondary';
 import { authService, paymentService } from './services/api';
 import './App.css';
+
+// Fires a GA4 page_view on every React Router navigation
+function PageTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'page_view', {
+      page_path: location.pathname + location.search,
+    });
+  }, [location]);
+  return null;
+}
 
 // Map backend plan ('free'|'pro'|'max') to frontend tier ('free'|'pro').
 function planToTier(plan) {
@@ -297,6 +309,7 @@ export default function App() {
       <AuthContext.Provider value={{ ...authState, setAuth, clearAuth, openAuthModal }}>
         <TierContext.Provider value={{ tier, setTier }}>
           <BrowserRouter>
+            <PageTracker />
             <Routes>
               <Route path="/"           element={<Landing />} />
               <Route path="/onboarding" element={<Onboarding />} />
