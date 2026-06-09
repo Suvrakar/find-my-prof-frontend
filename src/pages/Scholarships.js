@@ -2,6 +2,16 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Icon } from '../components/Icons';
 import { scholarshipService, userScholarshipService } from '../services/api';
 
+function useIsMobile() {
+  const [m, setM] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
+  useEffect(() => {
+    const fn = () => setM(window.innerWidth < 640);
+    window.addEventListener('resize', fn, { passive: true });
+    return () => window.removeEventListener('resize', fn);
+  }, []);
+  return m;
+}
+
 // ─────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────
@@ -282,7 +292,8 @@ function ScholarshipDrawer({ s, onClose, saved, onToggleSave, userEntry, onStatu
   return (
     <>
       <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 900, background: "rgba(0,0,0,0.35)" }}/>
-      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 901, width: 480,
+      <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 901,
+        width: "min(480px, 100vw)",
         background: "white", boxShadow: "-8px 0 32px rgba(0,0,0,0.12)",
         display: "flex", flexDirection: "column", overflow: "hidden" }}>
 
@@ -547,7 +558,7 @@ function Pagination({ page, totalPages, onPage }) {
 // ─────────────────────────────────────────────────────────────
 function SkeletonGrid() {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(330px, 100%), 1fr))", gap: 16 }}>
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} style={{ background: "white", borderRadius: 12, border: "1px solid var(--line)",
           overflow: "hidden", height: 280 }}>
@@ -628,7 +639,7 @@ function BrowseTab({ entryMap, onToggleSave, onOpen, onStatusChange }) {
         <SkeletonGrid />
       ) : items.length > 0 ? (
         <>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(330px, 100%), 1fr))", gap: 16 }}>
             {items.map(s => (
               <ScholarshipCard key={s.id} s={s}
                 saved={!!entryMap[s.id]}
@@ -892,7 +903,7 @@ function RecommendedTab({ entryMap, onToggleSave, onOpen, onStatusChange, isAuth
       )}
 
       {items.length > 0 ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(330px, 100%), 1fr))", gap: 16 }}>
           {items.map(s => (
             <ScholarshipCard key={s.id} s={s}
               saved={!!entryMap[s.id]}
@@ -924,6 +935,7 @@ const TABS = [
 ];
 
 export default function Scholarships() {
+  const isMobile = useIsMobile();
   const [activeTab,   setActiveTab]   = useState('browse');
   const [entries,     setEntries]     = useState([]);   // UserScholarship[]
   const [detail,      setDetail]      = useState(null);
@@ -988,7 +1000,7 @@ export default function Scholarships() {
 
   return (
     <div style={{ height: "100%", overflow: "auto", background: "var(--paper-2)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 28px 60px" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: isMobile ? "16px 14px 80px" : "28px 28px 60px" }}>
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between",

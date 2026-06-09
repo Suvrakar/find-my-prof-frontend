@@ -819,6 +819,8 @@ function ExportModal({ badge, filename, onClose, children }) {
 }
 
 function CVMaker({ versions, setVersions, currentId, setCurrentId }) {
+  const { isMobile } = useBreakpoint();
+  const [mobileTab, setMobileTab] = useState('edit'); // 'edit' | 'preview'
   const cur = versions.find(v => v.id === currentId) || versions[0];
   const cv  = cur?.data || DEFAULT_CV;
 
@@ -978,10 +980,26 @@ function CVMaker({ versions, setVersions, currentId, setCurrentId }) {
   );
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(360px,410px) 1fr", height: "calc(100vh - 56px)", overflow: "hidden" }}>
+    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(360px,410px) 1fr", height: isMobile ? "auto" : "calc(100vh - 56px)", overflow: isMobile ? "visible" : "hidden" }}>
+
+      {/* Mobile tab switcher */}
+      {isMobile && (
+        <div style={{ display: "flex", borderBottom: "1px solid var(--line)", background: "white" }}>
+          {[['edit','Edit CV'],['preview','Preview']].map(([id,label]) => (
+            <button key={id} onClick={() => setMobileTab(id)}
+              style={{ flex:1, padding:"10px 0", border:0, background:"none", cursor:"pointer",
+                fontSize:13, fontWeight: mobileTab===id ? 600 : 400,
+                color: mobileTab===id ? "var(--ink)" : "var(--ink-4)",
+                borderBottom: mobileTab===id ? "2px solid var(--ink)" : "2px solid transparent",
+                marginBottom:-1 }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── LEFT: editor ── */}
-      <div style={{ display: "flex", flexDirection: "column", borderRight: "1px solid var(--line)", overflow: "hidden", background: "white" }}>
+      <div style={{ display: isMobile && mobileTab !== 'edit' ? "none" : "flex", flexDirection: "column", borderRight: isMobile ? "none" : "1px solid var(--line)", overflow: isMobile ? "visible" : "hidden", background: "white" }}>
 
         {/* Header */}
         <div style={{ padding: "14px 16px 12px", borderBottom: "1px solid var(--line)", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1095,11 +1113,11 @@ function CVMaker({ versions, setVersions, currentId, setCurrentId }) {
       </div>
 
       {/* ── RIGHT: preview ── */}
-      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", background: "#c8c8c8" }}>
+      <div style={{ display: isMobile && mobileTab !== 'preview' ? "none" : "flex", flexDirection: "column", overflow: isMobile ? "visible" : "hidden", background: "#c8c8c8", minHeight: isMobile ? "80vw" : undefined }}>
 
         {/* Controls bar */}
-        <div style={{ padding: "9px 18px", background: "white", borderBottom: "1px solid var(--line)",
-          display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <div style={{ padding: "9px 14px", background: "white", borderBottom: "1px solid var(--line)",
+          display: "flex", alignItems: "center", gap: 8, flexShrink: 0, flexWrap: "wrap" }}>
           {/* Template switcher */}
           <span style={{ fontSize: 11, fontWeight: 600, color: "var(--ink-3)", textTransform: "uppercase",
             letterSpacing: "0.06em" }}>Template</span>
@@ -1385,6 +1403,8 @@ function SOPMaker({ versions, setVersions, currentId, setCurrentId }) {
     setVersions([n, ...versions]); setCurrentId(n.id);
   };
 
+  const { isMobile } = useBreakpoint();
+  const [mobileTab, setMobileTab]         = useState("edit");
   const [activeSection, setActiveSection] = useState("info");
   const [tone, setTone]                   = useState("academic");
   const [zoom, setZoom]                   = useState(100);
@@ -1403,10 +1423,26 @@ function SOPMaker({ versions, setVersions, currentId, setCurrentId }) {
   const onGenerate = () => { setGenerating(true); setTimeout(() => setGenerating(false), 1800); };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(360px,410px) 1fr", height: "calc(100vh - 56px)", overflow: "hidden" }}>
+    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(360px,410px) 1fr", height: isMobile ? "auto" : "calc(100vh - 56px)", overflow: isMobile ? "visible" : "hidden" }}>
+
+      {/* Mobile tab switcher */}
+      {isMobile && (
+        <div style={{ display: "flex", borderBottom: "1px solid var(--line)", background: "white" }}>
+          {[['edit','Edit SOP'],['preview','Preview']].map(([id,label]) => (
+            <button key={id} onClick={() => setMobileTab(id)}
+              style={{ flex:1, padding:"10px 0", border:0, background:"none", cursor:"pointer",
+                fontSize:13, fontWeight: mobileTab===id ? 600 : 400,
+                color: mobileTab===id ? "var(--ink)" : "var(--ink-4)",
+                borderBottom: mobileTab===id ? "2px solid var(--ink)" : "2px solid transparent",
+                marginBottom:-1 }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── LEFT: editor ── */}
-      <div style={{ display: "flex", flexDirection: "column", borderRight: "1px solid var(--line)", overflow: "hidden", background: "white" }}>
+      <div style={{ display: isMobile && mobileTab !== 'edit' ? "none" : "flex", flexDirection: "column", borderRight: isMobile ? "none" : "1px solid var(--line)", overflow: isMobile ? "visible" : "hidden", background: "white" }}>
 
         {/* Header */}
         <div style={{ padding: "14px 16px 12px", borderBottom: "1px solid var(--line)", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1425,7 +1461,7 @@ function SOPMaker({ versions, setVersions, currentId, setCurrentId }) {
         </div>
 
         {/* Section nav + form */}
-        <div style={{ flex: 1, overflow: "hidden", display: "flex" }}>
+        <div style={{ flex: 1, overflow: isMobile ? "visible" : "hidden", display: "flex" }}>
 
           {/* Section nav */}
           <div style={{ width: 96, borderRight: "1px solid var(--line)", overflow: "auto", background: "var(--paper-2)", flexShrink: 0 }}>
@@ -1485,10 +1521,10 @@ function SOPMaker({ versions, setVersions, currentId, setCurrentId }) {
       </div>
 
       {/* ── RIGHT: preview ── */}
-      <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", background: "#c8c8c8" }}>
+      <div style={{ display: isMobile && mobileTab !== 'preview' ? "none" : "flex", flexDirection: "column", overflow: isMobile ? "visible" : "hidden", background: "#c8c8c8" }}>
 
         {/* Controls bar */}
-        <div style={{ padding: "9px 18px", background: "white", borderBottom: "1px solid var(--line)",
+        <div style={{ padding: isMobile ? "9px 12px" : "9px 18px", background: "white", borderBottom: "1px solid var(--line)",
           display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: "var(--ink-3)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Tone</span>
           <div style={{ display: "flex", gap: 3, padding: 3, background: "var(--paper-2)", borderRadius: 8 }}>

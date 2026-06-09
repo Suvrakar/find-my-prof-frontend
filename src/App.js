@@ -56,18 +56,21 @@ function AuthModal({ initialMode = 'signin', onClose }) {
     e.preventDefault();
     setError('');
     setLoading(true);
+    let responseData = null;
     try {
       const { data } = mode === 'signin'
         ? await authService.login(username, password)
         : await authService.register(username, email, password);
-      setAuth({ token: data.token, user: data.user });
-      onClose();
-      navigate(data.is_new ? '/onboarding' : '/app/matches');
+      responseData = data;
     } catch (err) {
       setError(err.response?.data?.error || 'Something went wrong. Please try again.');
-    } finally {
       setLoading(false);
+      return;
     }
+    setLoading(false);
+    setAuth({ token: responseData.token, user: responseData.user });
+    onClose();
+    navigate(responseData.is_new ? '/onboarding' : '/app/matches');
   };
 
   return (
