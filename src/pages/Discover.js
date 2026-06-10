@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Icon } from '../components/Icons';
 import { Avatar, ScoreRing, Stars } from '../components/Shared';
 import { professors } from '../data';
-import { universityService, professorService, transformProfessor, buildCountryList, fundingExpirySemester, whatsnewService, relativeTime, savedService, COUNTRY_META, ratingService } from '../services/api';
+import { universityService, professorService, transformProfessor, buildCountryList, fundingExpirySemester, whatsnewService, relativeTime, savedService, COUNTRY_META, ratingService, paymentService } from '../services/api';
 import { useAuth } from '../App';
 
 // Module-level cache — survives re-mounts, cleared only on page refresh
@@ -21,32 +21,24 @@ function useBreakpoint() {
 }
 
 // --- Paywall overlay ---
-const MONTHLY_PRICE_ID = import.meta.env.VITE_PADDLE_MONTHLY_PRICE_ID || '';
-const YEARLY_PRICE_ID  = import.meta.env.VITE_PADDLE_YEARLY_PRICE_ID  || '';
+const MONTHLY_VARIANT = import.meta.env.VITE_LS_MONTHLY_VARIANT_ID || '';
+const YEARLY_VARIANT  = import.meta.env.VITE_LS_YEARLY_VARIANT_ID  || '';
 
 function PaywallOverlay({ title, subtitle }) {
-  const { user } = useAuth();
   const [loading, setLoading] = useState(null); // 'monthly' | 'yearly' | null
   const [err, setErr] = useState(null);
 
-  function checkout(priceId, key) {
-    const Paddle = window.Paddle;
-    if (!Paddle) { setErr('Payment system not loaded. Please refresh the page.'); return; }
-    if (!priceId) { setErr('Price not configured.'); return; }
+  async function checkout(variantId, key) {
+    if (!variantId) { setErr('Checkout not configured yet.'); return; }
     setLoading(key);
     setErr(null);
     try {
-      Paddle.Checkout.open({
-        items: [{ priceId, quantity: 1 }],
-        customData: { userId: user?.id, username: user?.username },
-        settings: {
-          successUrl: `${window.location.origin}/app/matches?payment=success`,
-        },
-      });
+      const { data } = await paymentService.createCheckout(variantId);
+      window.location.href = data.checkout_url;
     } catch (e) {
-      setErr('Could not open checkout. Please try again.');
+      setErr(e.response?.data?.error || 'Could not open checkout. Please try again.');
+      setLoading(null);
     }
-    setLoading(null);
   }
 
   return (
@@ -67,7 +59,7 @@ function PaywallOverlay({ title, subtitle }) {
             <div className="muted" style={{ fontSize: 11.5, marginBottom: 14 }}>$96 billed yearly · save 33%</div>
             <button className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}
               disabled={loading === 'yearly'}
-              onClick={() => checkout(YEARLY_PRICE_ID, 'yearly')}>
+              onClick={() => checkout(YEARLY_VARIANT, 'yearly')}>
               {loading === 'yearly' ? 'Opening…' : 'Start now'}
             </button>
           </div>
@@ -77,7 +69,7 @@ function PaywallOverlay({ title, subtitle }) {
             <div className="muted" style={{ fontSize: 11.5, marginBottom: 14 }}>Billed monthly</div>
             <button className="btn" style={{ width: '100%', justifyContent: 'center' }}
               disabled={loading === 'monthly'}
-              onClick={() => checkout(MONTHLY_PRICE_ID, 'monthly')}>
+              onClick={() => checkout(MONTHLY_VARIANT, 'monthly')}>
               {loading === 'monthly' ? 'Opening…' : 'Start now'}
             </button>
           </div>

@@ -560,12 +560,12 @@ export const outreachEmailService = {
 };
 
 // ---------------------------------------------------------------------------
-// Paddle payments
+// LemonSqueezy payments
 // ---------------------------------------------------------------------------
 export const paymentService = {
-  getStatus:           ()  => api.get('/payments/status/'),
-  cancel:              ()  => api.post('/payments/cancel/'),
-  getUpdatePaymentUrl: ()  => api.get('/payments/update-payment/'),
+  createCheckout: (variantId) => api.post('/payments/create-checkout/', { variant_id: variantId }),
+  getStatus:      ()          => api.get('/payments/status/'),
+  cancel:         ()          => api.post('/payments/cancel/'),
 };
 
 export default api;

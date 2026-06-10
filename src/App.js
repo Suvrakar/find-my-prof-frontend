@@ -238,18 +238,6 @@ export default function App() {
   const [authModal, setAuthModal] = useState({ open: false, mode: 'signin' });
   const [paymentToast, setPaymentToast] = useState(null);
 
-  // Initialize Paddle.js on mount
-  useEffect(() => {
-    const Paddle = window.Paddle;
-    const clientToken = import.meta.env.VITE_PADDLE_CLIENT_TOKEN;
-    if (Paddle && clientToken) {
-      if (import.meta.env.VITE_PADDLE_SANDBOX === 'true') {
-        Paddle.Environment.set('sandbox');
-      }
-      Paddle.Initialize({ token: clientToken });
-    }
-  }, []);
-
   // On boot, re-verify plan from server (handles expiries + admin grants).
   // Also handles ?payment=success / ?payment=cancelled redirect from Paddle.
   useEffect(() => {

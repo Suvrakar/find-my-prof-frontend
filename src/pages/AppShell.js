@@ -1065,32 +1065,24 @@ function BillingSection() {
   const { tier } = useTier();
   const { user } = useAuth();
   const [cancelLoading, setCancelLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(null);
   const [billingErr, setBillingErr] = useState(null);
   const [cancelDone, setCancelDone] = useState(false);
 
-  const MONTHLY = import.meta.env.VITE_PADDLE_MONTHLY_PRICE_ID || '';
-  const YEARLY  = import.meta.env.VITE_PADDLE_YEARLY_PRICE_ID  || '';
+  const MONTHLY = import.meta.env.VITE_LS_MONTHLY_VARIANT_ID || '';
+  const YEARLY  = import.meta.env.VITE_LS_YEARLY_VARIANT_ID  || '';
 
-  function startCheckout(priceId, key) {
-    const Paddle = window.Paddle;
-    if (!Paddle) { setBillingErr('Payment system not loaded. Please refresh the page.'); return; }
-    if (!priceId) { setBillingErr('Price not configured yet.'); return; }
+  async function startCheckout(variantId, key) {
+    if (!variantId) { setBillingErr('Checkout not configured yet.'); return; }
     setCheckoutLoading(key);
     setBillingErr(null);
     try {
-      Paddle.Checkout.open({
-        items: [{ priceId, quantity: 1 }],
-        customData: { userId: user?.id, username: user?.username },
-        settings: {
-          successUrl: `${window.location.origin}/app/matches?payment=success`,
-        },
-      });
+      const { data } = await paymentService.createCheckout(variantId);
+      window.location.href = data.checkout_url;
     } catch (e) {
-      setBillingErr('Could not open checkout. Please try again.');
+      setBillingErr(e.response?.data?.error || 'Could not open checkout. Please try again.');
+      setCheckoutLoading(null);
     }
-    setCheckoutLoading(null);
   }
 
   function handleCancel() {
@@ -1103,13 +1095,8 @@ function BillingSection() {
       .finally(() => setCancelLoading(false));
   }
 
-  function handleUpdatePayment() {
-    setUpdateLoading(true);
-    setBillingErr(null);
-    paymentService.getUpdatePaymentUrl()
-      .then(res => { window.open(res.data.url, '_blank', 'noopener'); })
-      .catch(e => { setBillingErr(e.response?.data?.error || 'Could not get payment update link.'); })
-      .finally(() => setUpdateLoading(false));
+  function handleManageBilling() {
+    window.open('https://app.lemonsqueezy.com/billing', '_blank', 'noopener');
   }
 
   return (
@@ -1133,8 +1120,8 @@ function BillingSection() {
               hint="Update payment method or cancel your subscription."
               right={
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button className="btn btn-sm" onClick={handleUpdatePayment} disabled={updateLoading}>
-                    {updateLoading ? 'Loading…' : <><Icon.ExternalLink size={12}/> Update card</>}
+                  <button className="btn btn-sm" onClick={handleManageBilling}>
+                    <Icon.ExternalLink size={12}/> Manage billing
                   </button>
                   <button className="btn btn-sm" onClick={handleCancel} disabled={cancelLoading}
                     style={{ color: 'var(--red)', borderColor: 'var(--red)' }}>
